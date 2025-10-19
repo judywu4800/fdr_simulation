@@ -7,7 +7,7 @@ def generate_pvalues(
     m: int,
     pi0: float,
     L: float = 10.0,
-    pattern: str = "decreasing",
+    pattern: str = "equal",
     random_state: Optional[int] = None,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
@@ -21,8 +21,6 @@ def generate_pvalues(
         Proportion of true null hypotheses (0.0, 0.25, 0.5, 0.75).
     L : float, default = 10
         Signal strength; paper used L = 5 and 10 but Fig. 1 shows L = 10.
-    pattern : {"decreasing"}
-        Effect-size pattern. Only “decreasing” implemented for Setting (1).
     random_state : int | None
         Optional RNG seed for reproducibility.
 
@@ -42,8 +40,8 @@ def generate_pvalues(
     # 2. assign means μ_i
     mu = np.zeros(m)
     if m1 > 0:
-        if pattern.lower() != "decreasing":
-            raise NotImplementedError("Only 'decreasing' pattern implemented (Setting 1).")
+        if pattern.lower() != "equal":
+            raise NotImplementedError("Only 'equal' pattern implemented (Setting 1).")
 
         # false nulls divided into four equal groups
         group_sizes = np.full(4, m1 // 4)
