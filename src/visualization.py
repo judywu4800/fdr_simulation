@@ -3,18 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 def plot_power_vs_m(df):
-    """
-    Plot power vs m for each pi0 level (each as one subplot),
-    arranged horizontally (4 columns), matching BH (1995) Figure 1 style.
-    """
-    import os
-    import matplotlib.pyplot as plt
-
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     FIG_DIR = os.path.join(BASE_DIR, "results", "figures")
     os.makedirs(FIG_DIR, exist_ok=True)
 
-    pi0_levels = sorted(df["pi0"].unique())  # left-to-right increasing
+    pi0_levels = sorted(df["pi0"].unique())
     methods = ["bonferroni", "hochberg", "bh"]
     colors = {"bonferroni": "black", "hochberg": "gray", "bh": "red"}
     linestyles = {"bonferroni": ":", "hochberg": "--", "bh": "-"}

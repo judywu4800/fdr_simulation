@@ -1,30 +1,13 @@
 import numpy as np
 
-
-# ---------------------------------------------------------------------
 # 1. Bonferroni correction
-# ---------------------------------------------------------------------
-def bonferroni(pvals: np.ndarray, alpha: float = 0.05) -> np.ndarray:
-    """
-    Bonferroni correction: reject if p_i <= alpha / m
-    """
+def bonferroni(pvals, alpha = 0.05):
     m = len(pvals)
     cutoff = alpha / m
     return pvals <= cutoff
 
-
-# ---------------------------------------------------------------------
-# 2. Hochberg (1988) step-up procedure for FWER control
-# ---------------------------------------------------------------------
-def hochberg(pvals: np.ndarray, alpha: float = 0.05) -> np.ndarray:
-    """
-    Hochberg step-up method controlling FWER.
-
-    Procedure:
-      1. Sort p-values in descending order: p_(m) >= ... >= p_(1)
-      2. Find the smallest k such that p_(m−k+1) <= α / k
-      3. Reject all hypotheses with p_i <= α / k
-    """
+# 2. Hochberg
+def hochberg(pvals, alpha = 0.05):
     m = len(pvals)
     sorted_idx = np.argsort(pvals)[::-1]  # descending
     sorted_p = pvals[sorted_idx]
@@ -38,19 +21,8 @@ def hochberg(pvals: np.ndarray, alpha: float = 0.05) -> np.ndarray:
 
     return reject
 
-
-# ---------------------------------------------------------------------
-# 3. Benjamini–Hochberg (1995) step-up FDR control
-# ---------------------------------------------------------------------
-def benjamini_hochberg(pvals: np.ndarray, alpha: float = 0.05) -> np.ndarray:
-    """
-    Benjamini–Hochberg FDR-controlling procedure.
-
-    Procedure:
-      1. Sort p-values ascending: p_(1) <= ... <= p_(m)
-      2. Find largest k such that p_(k) <= (k/m) * alpha
-      3. Reject all hypotheses with p_i <= p_(k)
-    """
+# 3. Benjamini–Hochberg
+def benjamini_hochberg(pvals, alpha= 0.05):
     m = len(pvals)
     order = np.argsort(pvals)
     sorted_p = pvals[order]
@@ -65,11 +37,7 @@ def benjamini_hochberg(pvals: np.ndarray, alpha: float = 0.05) -> np.ndarray:
         reject = pvals <= cutoff
     return reject
 
-
-# ---------------------------------------------------------------------
-# Optional unified interface
-# ---------------------------------------------------------------------
-def apply_method(pvals: np.ndarray, alpha: float, method: str) -> np.ndarray:
+def apply_method(pvals, alpha, method):
     """
     Apply one of the multiple-testing procedures.
 

@@ -1,21 +1,7 @@
-"""
-simulation.py
---------------
-Reproduce Setting (b) from Benjamini & Hochberg (1995).
-
-For each combination of (m, pi0), repeat simulations, apply
-Bonferroni, Hochberg, and BH procedures, compute empirical FDR & Power.
-
-Outputs:
-    - results/raw/sim_summary.csv : summarized metrics
-    - results/figures/power_vs_m.png : BH-style figure
-"""
-
 import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 from src.dgps import generate_pvalues
 from src.methods import apply_method
@@ -23,9 +9,7 @@ from src.metrics import compute_fdr, compute_power, summarize_metrics
 from src.visualization import plot_power_vs_m
 
 
-# ---------------------------------------------------------------------
 # CONFIGURATION
-# ---------------------------------------------------------------------
 N_REPS = 5000       # number of replications per (m, pi0)
 ALPHA = 0.05
 M_VALUES = [4, 8, 16, 32, 64]
@@ -42,9 +26,7 @@ os.makedirs(FIG_DIR, exist_ok=True)
 os.makedirs(FIG_DIR, exist_ok=True)
 
 
-# ---------------------------------------------------------------------
 # MAIN SIMULATION
-# ---------------------------------------------------------------------
 def run_simulation():
     records = []
 
@@ -61,7 +43,6 @@ def run_simulation():
                     power = compute_power(rejects, truth)
                     sim_results[method].append({"fdr": fdr, "power": power})
 
-            # aggregate across replications
             for method in METHODS:
                 summary = summarize_metrics(sim_results[method])
                 records.append({
