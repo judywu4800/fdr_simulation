@@ -6,30 +6,48 @@ This folder is organized as follows.
 
 ```
 fdr_simulation
-├── ADEMP.md
-├── ANALYSIS.md
 ├── data
+├── doc
+│   ├── ADEMP.md
+│   ├── ANALYSIS.md
+│   ├── baseline.md
+│   └── optimization.md
 ├── Makefile
+├── profiling
+│   ├── benchmark.py
+│   ├── profile_m.py
+│   ├── profile_N_rep.py
+│   └── profiling.py
 ├── pytest.ini
 ├── README.md
 ├── requirements.txt
 ├── results
 │   ├── figures
+│   │   ├── complexity_loglog_methods.png
 │   │   ├── diagnostic_boxplots.png
-│   │   └── power_vs_m_grid.png
+│   │   ├── power_vs_m_grid_baseline.png
+│   │   ├── power_vs_m_grid_optimized.png
+│   │   ├── power_vs_m_grid.png
+│   │   ├── runtime_total_vs_N_baseline.png
+│   │   └── runtime_total_vs_N_comparison.png
 │   └── raw
-│       └── sim_summary.csv
+│       ├── sim_summary_optimized.csv
+│       ├── sim_summary.csv
+│       └── timing_summary.csv
 ├── src
 │   ├── __init__.py
+│   ├── debug.py
 │   ├── dgps.py
 │   ├── methods.py
 │   ├── metrics.py
+│   ├── simulation_optimized.py
 │   ├── simulation.py
 │   └── visualization.py
 └── tests
     ├── test_dgps.py
     ├── test_methods.py
-    └── test_metrics.py
+    ├── test_metrics.py
+    └── test_regression.py
 ```
 
 ## Setup Instructions
@@ -54,17 +72,22 @@ fdr_simulation
 - `make simulate`: Run simulations and save raw results.
 - `make analyze`: Summarize FDR and power metrics.
 - `make figures`: Generate publication-quality and diagnostic plots.
+- `make profile`: Run profiling on representative simulation.
+- `make complexity`: Run computational complexity analysis.
+- `make benchmark`: Run timing comparison between baseline and optimized method.
+- `make parallel`: Run optimized version with parallelization.
 
 Intermediate and final outputs are saved under:
    ```bash
-  results/raw/sim_summary.csv
-  results/figures/power_vs_m_grid.png
-  results/figures/diagnostic_boxplots.png
+  results/raw
+  results/figures
    ```
-**Estimated run time**: 3-5 minutes.
 
 ## Summary of Key Findings
 The Benjamini–Hochberg (BH) procedure achieves much higher power while keeping the false discovery rate below 0.05.
 Bonferroni and Hochberg maintain stricter control of Type I error but lose power, especially as the number of hypotheses m increases.
 These results replicate Figure 1 Column 2 from BH (1995) and confirm the trade-off between FDR control and FWER conservativeness.
+
+## Summary of Unit 3
+See `doc/baseline.md` and `doc/optimization.md` 
 
