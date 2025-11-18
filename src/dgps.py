@@ -21,7 +21,6 @@ def generate_pvalues(m, pi0, L = 10.0, pattern = "equal", random_state = None):
     Returns
     -------
     pvals : ndarray of shape (m,)
-        One-sided p-values = 1 − \Phi(Z_i).
     truth : ndarray of bool, shape (m,)
         True-null indicator; True = null hypothesis is true.
     """
@@ -52,8 +51,45 @@ def generate_pvalues(m, pi0, L = 10.0, pattern = "equal", random_state = None):
 
     return pvals, truth
 
+def generate_pvalues_matrix(M, N, pi0, L = 10.0, random_state = None):
+    """
+    Generate one replication of Z-statistics and p-values under a specified configuration.
+    :param M: int. Total number of hypotheses
+    :param N: int. Total number of repetitions
+    :param pi0: float. Proportion of true null hypotheses (0.0, 0.25, 0.5, 0.75).
+    :param L: float. Signal strength; paper used L = 5 and 10, shows L = 10 for illustration.
+    :param random_state: int | None. Optional RNG seed for reproducibility.
+    :return:
+    pvals : ndarray of shape (m,)
+    truth : ndarray of bool, shape (m,)
+        True-null indicator; True = null hypothesis is true.
+    """
+    rng = np.random.default_rng(random_state)
+
+    m0 = int(round(pi0 * M))
+    m1 = M - m0
+
+    mu = np.zeros(M)
+
+    if m1 > 0:
+        effect_levels = np.array([L, 3 * L / 4, L / 2, L / 4])
+
+        group_sizes = np.full(4, m1 // 4)
+        group_sizes[: (m1 % 4)] += 1
+
+        mu_nonnull = np.repeat(effect_levels, group_sizes)
+        mu[m0:] = mu_nonnull[:m1]
+
+    Z = rng.normal(loc=mu, scale=1.0, size=(N, M))
+    pvals = 2 * (1 - norm.cdf(np.abs(Z)))
+
+    truth = np.zeros(M, dtype=bool)
+    truth[:m0] = True
+
+    return pvals, truth
 
 if __name__ == "__main__":
-    p, t = generate_pvalues(m=16, pi0=0.5, L=10, pattern="decreasing", random_state=123)
+    #p, t = generate_pvalues(m=16, pi0=0.5, L=10, pattern="decreasing", random_state=123)
+    p, t = generate_pvalues_matrix(M=16, N=20, pi0=0.5, L=1)
     print("Example p-values:", np.round(p, 4))
     print("True null flags:", t)

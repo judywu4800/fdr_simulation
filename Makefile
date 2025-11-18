@@ -49,7 +49,29 @@ test:
 	pytest $(TEST_DIR) -v
 	@echo "All tests passed."
 
+profile:
+	@echo "Running profiling..."
+	$(PYTHON) -m profiling.profiling
+	@echo "All profiling analysis done."
+
+complexity:
+	@echo "Running complexity..."
+	$(PYTHON) -m profiling.profile_m
+	$(PYTHON) -m profiling.profile_N_rep
+	@echo "All complexity analysis done."
+
+make benchmark:
+	@echo "Running timing comparison..."
+	$(PYTHON) -m profiling.benchmark
+	@echo "All timing comparison analysis done."
+
+make parallel:
+	@echo "Running parallelized version..."
+	$(PYTHON) -m src.simulation_optimized
+	@echo "Done."
+
+
 # ============================================================
 # Phony targets (not actual files)
 # ============================================================
-.PHONY: all simulate analyze figures clean test
+.PHONY: all simulate analyze figures clean test profile complexity benchmark parallel

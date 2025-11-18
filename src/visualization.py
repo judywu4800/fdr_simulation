@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-def plot_power_vs_m(df):
+def plot_power_vs_m(df, name = "power_vs_m_grid.png"):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     FIG_DIR = os.path.join(BASE_DIR, "results", "figures")
     os.makedirs(FIG_DIR, exist_ok=True)
@@ -59,7 +59,7 @@ def plot_power_vs_m(df):
     plt.suptitle("Setting 1: Equal number per group (L=10)", fontsize=12, y=1.05)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
-    path = os.path.join(FIG_DIR, "power_vs_m_grid.png")
+    path = os.path.join(FIG_DIR, name)
     plt.savefig(path, dpi=300, bbox_inches="tight")
     print(f"Saved figure to {path}")
 
@@ -69,7 +69,7 @@ FIG_DIR = os.path.join(BASE_DIR, "results", "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
 
-def plot_diagnostic(df):
+def plot_diagnostic(df, name= "diagnostic_boxplots.png"):
     """Create diagnostic boxplots of FDR and Power."""
     sns.set(style="whitegrid", font_scale=1.0)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=False)
@@ -92,7 +92,7 @@ def plot_diagnostic(df):
     axes[1].set_ylabel("Empirical Power")
 
     plt.tight_layout()
-    path = os.path.join(FIG_DIR, "diagnostic_boxplots.png")
+    path = os.path.join(FIG_DIR, name)
     plt.savefig(path, dpi=300, bbox_inches="tight")
     print(f"Saved diagnostic plot to {path}")
 

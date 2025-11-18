@@ -27,6 +27,19 @@ def summarize_metrics(results):
         "sd_power": np.std(power_vals),
     }
 
+# optimization
+def compute_fdp_power(rej, null_mask):
+    R = rej.sum(axis=1)
+    V = rej[:, null_mask].sum(axis=1)
+    FDP = np.where(R>0, V/R, 0.0)
+    m1 = (~null_mask).sum()
+    if m1 == 0:
+        return FDP.mean(), 0.0
+
+    TP = rej[:, ~null_mask].sum(axis=1)
+    power = TP / m1
+    return FDP.mean(), power.mean()
+
 
 if __name__ == "__main__":
     np.random.seed(123)

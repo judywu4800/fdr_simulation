@@ -53,6 +53,33 @@ def apply_method(pvals, alpha, method):
     else:
         raise ValueError(f"Unknown method '{method}'")
 
+
+### Optimized Methods
+def compute_rejections(p,alpha,idx):
+    order = np.argsort(p, axis=1)
+    p_sorted = np.take_along_axis(p, order, axis=1)
+
+    # BH
+    bh_threshold = alpha * idx/p.shape[1]
+    bh = p_sorted <= bh_threshold
+    k_bh = (bh * idx).max(axis=1)
+    rej_sorted_bh = idx <= k_bh[:, None]
+    rej_bh = np.zeros_like(rej_sorted_bh)
+    np.put_along_axis(rej_bh, order, rej_sorted_bh, axis = 1)
+
+    #Hochberg
+    hoch_threshold = alpha / (p.shape[1] - idx + 1)
+    hoch = p_sorted <= hoch_threshold
+    k_h = (hoch * idx).max(axis=1)
+    rej_sorted_h = idx <= k_h[:, None]
+    rej_h = np.zeros_like(rej_sorted_h)
+    np.put_along_axis(rej_h, order, rej_sorted_h, axis=1)
+
+    bonf_threshold = alpha / (p.shape[1])
+    rej_bonf = p<=bonf_threshold
+
+    return rej_bonf, rej_h, rej_bh
+
 if __name__ == "__main__":
     np.random.seed(42)
     pvals = np.random.uniform(0, 1, 10)  # 10 random p-values
